@@ -5,6 +5,7 @@
 if exists("g:loaded_yankassassin")
   finish
 endif
+let g:yankassassin_disabled_filetypes = []
 let g:loaded_yankassassin = 1
 
 let s:save_cpo = &cpo
@@ -17,7 +18,7 @@ if g:yankassassin_use_mappings == 0
         autocmd!
         autocmd VimEnter * let s:NoMapPreYankPos = getpos('.')
         autocmd CursorMoved * let s:NoMapPreYankPos = getpos('.')
-        autocmd TextYankPost * call s:YankAssassin()
+        autocmd TextYankPost * if !empty(g:yankassassin_disabled_filetypes) && index(g:yankassassin_disabled_filetypes, &filetype) == -1 | call s:YankAssassin()
     augroup END
     function! s:YankAssassin() abort
         if get(g:, 'MoveYankMappings', 1) && v:event.operator=="y" && !empty(s:NoMapPreYankPos)
